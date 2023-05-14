@@ -1,0 +1,59 @@
+.my-context-menu {
+  position: absolute;
+  z-index: 9999;
+  background-color: #fff;
+  list-style: none;
+  margin: 0;
+  padding: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  font-weight: normal;
+  min-width: 120px;
+}
+
+.my-context-menu-item {
+  margin: 0;
+  padding: 3px 20px;
+  cursor: pointer;
+}
+
+.connection-details {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 9999;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+}
+
+.connection-details .title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.connection-details .label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.connection-details .value {
+  margin-right: 20px;
+}
+
+.connection-details .close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+}
+
+.my-context-menu hr {
+  margin: 5px 0;
+  border: none;
+  border-bottom: 1px solid #ccc;
+}

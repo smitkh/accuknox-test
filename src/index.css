@@ -1,0 +1,131 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-right: 10px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.graph-container {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.graph-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.graph-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.graph-menu li {
+  cursor: pointer;
+}
+
+.graph-menu li:hover {
+  background-color: lightgrey;
+}
+.my-context-menu {
+  position: absolute;
+  z-index: 9999;
+  background-color: #fff;
+  list-style: none;
+  margin: 0;
+  padding: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  font-weight: normal;
+  min-width: 120px;
+}
+
+.my-context-menu-item {
+  margin: 0;
+  padding: 3px 20px;
+  cursor: pointer;
+}
+
+.my-context-menu-item:hover {
+  background-color: #f1f1f1;
+}
+
+.my-context-menu hr {
+  margin: 5px 0;
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
