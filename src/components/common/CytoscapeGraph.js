@@ -18,6 +18,8 @@ import "cytoscape-context-menus/cytoscape-context-menus.css";
 import "./../../graph.css";
 import { debounce } from "./debounce";
 import { NodeDetailsModal } from "./NodeDetailsModal";
+import { useSelector } from "react-redux";
+import { style } from "../../constant/style";
 
 cytoscape.use(cola);
 cytoscape.use(popper);
@@ -26,29 +28,14 @@ cytoscape.use(cyqtip);
 cytoscape.use(klay);
 cytoscape.use(contextMenus);
 
-const personIcon = "\uf007";
-const companyIcon = "\uf1ad";
-const isShareholderType = "IS-SHAREHOLDER";
 
-const getNodeColor = (node) => {
-  const group = node.getData("group");
-  if (group === "purple") {
-    return "#67328E";
-  }
-  if (group === "green") {
-    return "#328E5B";
-  }
-  return "#DE8B53";
-};
 
-const getEdgeColor = (edge) => {
-  if (edge.getData("type") === isShareholderType) {
-    return "#89C7D6";
-  }
-  return "#8E6538";
-};
 
-const CytoscapeGraph = ({ nodes, edges, style, layout }) => {
+
+
+const CytoscapeGraph = () => {
+  const { nodes, edges, layout } = useSelector((state) => state.graph);
+  
   const cyRef = useRef(null);
   const [modalNode, setModalNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
@@ -180,7 +167,7 @@ const CytoscapeGraph = ({ nodes, edges, style, layout }) => {
       cy.current = cytoscape({
         container: cyRef.current,
         elements: { nodes, edges },
-        style,
+        style:style,
         layout: selectLayout(),
       });
 
@@ -267,67 +254,6 @@ const CytoscapeGraph = ({ nodes, edges, style, layout }) => {
         className="cy"
         style={{ height: "100%", width: "100%" }}
       />
-      <div className="toolbar" id="ui">
-        <form>
-          <div className="section mode">
-            <h3>Company analysis</h3>
-            <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-              <div>All nodes</div>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={isNodeGroup}
-                  onChange={handleToggle}
-                />
-                <span className="slider round"></span>
-              </label>
-              <div>Group</div>
-            </div>
-            <div className="switch switch--horizontal">
-              <input
-                type="radio"
-                name="edge-group"
-                value="detail"
-                checked="checked"
-              />
-              <label for="detail">All Edges</label>
-              <input type="radio" name="edge-group" value="group" />
-              <label for="group">Backbone</label>
-              <span className="toggle-outside">
-                <span className="toggle-inside"></span>
-              </span>
-            </div>
-          </div>
-          <div className="controls">
-            <button id="layout" className="btn menu">
-              Layout
-            </button>
-          </div>
-        </form>
-        <div className="section mode" id="details"></div>
-      </div>
-      <button onClick={handleToggleEdges}>Toggle Edges</button>
-      <button onClick={() => debouncedHandleZoom(1.1)}>Zoom In</button>
-      <button onClick={() => debouncedHandleZoom(0.9)}>Zoom Out</button>
-
-      {isModalOpen && (
-        <div>
-          <div
-            className="modal-overlay"
-            onClick={() => setIsModalOpen(false)}
-          />
-          <div className="modal">
-            <NodeDetailsModal node={modalNode} />
-          </div>
-        </div>
-      )}
-      {selectedEdge && (
-        <div className="connection-details">
-          <h2>{selectedEdge.id()}</h2>
-          <p>{selectedEdge.data("description")}</p>
-          <button onClick={() => setSelectedEdge(null)}>Close</button>
-        </div>
-      )}
     </>
   );
 };
