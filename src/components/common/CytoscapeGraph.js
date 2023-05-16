@@ -18,8 +18,9 @@ import "cytoscape-context-menus/cytoscape-context-menus.css";
 import "./../../graph.css";
 import { debounce } from "./debounce";
 import { NodeDetailsModal } from "./NodeDetailsModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { style } from "../../constant/style";
+// import { setCytoscapeInstance } from "../../redux/featuresSlice";
 
 cytoscape.use(cola);
 cytoscape.use(popper);
@@ -28,20 +29,16 @@ cytoscape.use(cyqtip);
 cytoscape.use(klay);
 cytoscape.use(contextMenus);
 
-
-
-
-
-
-const CytoscapeGraph = () => {
+const CytoscapeGraph = ({ cy }) => {
   const { nodes, edges, layout } = useSelector((state) => state.graph);
-  
+
   const cyRef = useRef(null);
   const [modalNode, setModalNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showEdges, setShowEdges] = useState(true);
-  const cy = useRef(null);
+  // const cy = useRef(null);
+  const dispatch = useDispatch();
 
   const [isNodeGroup, setNodeGroup] = useState(false);
 
@@ -87,11 +84,6 @@ const CytoscapeGraph = () => {
       }
     }, []);
 
-    cy.current.batch(() => {
-      cy.current.elements().remove();
-      cy.current.add({ nodes: finalNode, edges: newEdges });
-      cy.current.layout(selectLayout()).run();
-    });
     return { nodes: finalNode, edges: newEdges };
   };
 
@@ -102,6 +94,7 @@ const CytoscapeGraph = () => {
       cy.current.layout(selectLayout()).run();
     });
   };
+
   const handleToggle = () => {
     if (!isNodeGroup) {
       const result = makeNodegroup();
@@ -167,7 +160,7 @@ const CytoscapeGraph = () => {
       cy.current = cytoscape({
         container: cyRef.current,
         elements: { nodes, edges },
-        style:style,
+        style: style,
         layout: selectLayout(),
       });
 
@@ -232,8 +225,8 @@ const CytoscapeGraph = () => {
           cy.elements().removeClass("selected-node selected-edge");
         }
       });
+      // dispatch(setCytoscapeInstance(cy.current));
     }
-
     return () => {
       cy.current.destroy();
     };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import CytoscapeGraph from "../components/common/CytoscapeGraph";
 import Sidebar from "../components/Sidebar";
 import { useSelector } from "react-redux";
@@ -33,16 +33,13 @@ const style = [
 
 const Graph = () => {
   const { nodes, edges } = useSelector((state) => state.graph);
-
+  const cyRef = useRef(null);
   return (
     <div className="main">
-      <Sidebar />
+      <Sidebar cyRef={cyRef} />
       {!!nodes.length && (
         <div className="graph-main">
-          <CytoscapeGraph
-            nodes={nodes}
-            edges={edges}
-          />
+          <CytoscapeGraph nodes={nodes} edges={edges} cy={cyRef} />
         </div>
       )}
     </div>

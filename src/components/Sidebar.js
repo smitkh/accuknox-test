@@ -1,6 +1,56 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { groupNode } from "../redux/featuresSlice";
+import { makeNodegroup } from "../constant/graphData";
+import { debounce } from "./common/debounce";
 
-const Sidebar = () => {
+const Sidebar = ({ cyRef }) => {
+  const { allNodesShow, nodes, edges } = useSelector((state) => state.graph);
+  const [showEdges, setShowEdges] = useState(true);
+  const dispatch = useDispatch();
+
+  const updateData = (data) => {
+    console.log(data, "cyref");
+    cyRef.current.batch(() => {
+      cyRef.current.elements().remove();
+      cyRef.current.add(data);
+      cyRef.current.layout({ name: "cola" }).run();
+    });
+  };
+
+  const handleToggle = () => {
+    let isShow = !allNodesShow;
+    if (isShow) {
+      const result = makeNodegroup();
+      updateData(result);
+    } else {
+      updateData({ nodes, edges });
+    }
+    dispatch(groupNode(isShow));
+  };
+
+  const handleZoom = (level) => {
+    const cyZoom = cyRef.current;
+    if (!cyZoom) return;
+    cyRef.current.batch(() => {
+      cyZoom.zoom(cyZoom.zoom() * level);
+    });
+  };
+
+  const debouncedHandleZoom = debounce(handleZoom, 200);
+
+  const handleToggleEdges = useCallback(() => {
+    cyRef.current.batch(() => {
+      cyRef.current.elements("edge").forEach((edge) => {
+        if (showEdges) {
+          edge.hide();
+        } else {
+          edge.show();
+        }
+      });
+    });
+  }, [cyRef, showEdges]);
+
   return (
     <>
       <div className="sidebar">
@@ -9,75 +59,24 @@ const Sidebar = () => {
           <label className="switch">
             <input
               type="checkbox"
-            //   checked={isNodeGroup}
-            //   onChange={handleToggle}
-            />
-            <span className="slider round"></span>
-          </label>
-          <div>Group</div>
-        </div>
-      </div>
-      {/* <div className="toolbar" id="ui">
-    <form>
-      <div className="section mode">
-        <h3>Company analysis</h3>
-        <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-          <div>All nodes</div>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={isNodeGroup}
+              checked={allNodesShow}
               onChange={handleToggle}
             />
             <span className="slider round"></span>
           </label>
           <div>Group</div>
         </div>
-        <div className="switch switch--horizontal">
-          <input
-            type="radio"
-            name="edge-group"
-            value="detail"
-            checked="checked"
-          />
-          <label for="detail">All Edges</label>
-          <input type="radio" name="edge-group" value="group" />
-          <label for="group">Backbone</label>
-          <span className="toggle-outside">
-            <span className="toggle-inside"></span>
-          </span>
-        </div>
-      </div>
-      <div className="controls">
-        <button id="layout" className="btn menu">
-          Layout
+        <button
+          onClick={() => {
+            handleToggleEdges();
+            setShowEdges((show) => !show);
+          }}
+        >
+          Toggle Edges
         </button>
+        <button onClick={() => debouncedHandleZoom(1.1)}>Zoom In</button>
+        <button onClick={() => debouncedHandleZoom(0.9)}>Zoom Out</button>
       </div>
-    </form>
-    <div className="section mode" id="details"></div>
-  </div>
-  <button onClick={handleToggleEdges}>Toggle Edges</button>
-  <button onClick={() => debouncedHandleZoom(1.1)}>Zoom In</button>
-  <button onClick={() => debouncedHandleZoom(0.9)}>Zoom Out</button>
-
-  {isModalOpen && (
-    <div>
-      <div
-        className="modal-overlay"
-        onClick={() => setIsModalOpen(false)}
-      />
-      <div className="modal">
-        <NodeDetailsModal node={modalNode} />
-      </div>
-    </div>
-  )}
-  {selectedEdge && (
-    <div className="connection-details">
-      <h2>{selectedEdge.id()}</h2>
-      <p>{selectedEdge.data("description")}</p>
-      <button onClick={() => setSelectedEdge(null)}>Close</button>
-    </div>
-  )} */}
     </>
   );
 };
